@@ -1,6 +1,6 @@
 # Exemplo de TDD
 
-Este projeto demonstra a aplicação dos princípios de Test-Driven Development (TDD)
+Este projeto demonstra a aplicação dos princípios de Test-Driven Development (TDD) para a funcionalidade de Cadastro de Usuário.
 
 ## Funcionalidades Implementadas com TDD
 
