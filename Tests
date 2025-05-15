@@ -1,0 +1,31 @@
+repositorio = UsuarioRepositorio()
+servico = UsuarioServico(repositorio)
+
+try:
+    # Cadastro de usuário
+    novo_usuario = servico.cadastrar_usuario("João da Silva", "joao@email.com", "senha123")
+    print(f"Usuário cadastrado: {novo_usuario.nome}, {novo_usuario.email}")
+
+    # Tentativa de cadastrar com email existente
+    servico.cadastrar_usuario("Maria Souza", "joao@email.com", "outra_senha")
+
+except ValueError as e:
+    print(f"Erro ao cadastrar: {e}")
+
+try:
+    # Login bem-sucedido
+    usuario_logado = servico.logar_usuario("joao@email.com", "senha123")
+    print(f"Usuário logado: {usuario_logado.nome}")
+
+    # Login com senha incorreta
+    servico.logar_usuario("joao@email.com", "senha_errada")
+
+except ValueError as e:
+    print(f"Erro ao logar: {e}")
+
+try:
+    # Cadastro com campos vazios
+    servico.cadastrar_usuario("", "email@email.com", "senha")
+
+except ValueError as e:
+    print(f"Erro ao cadastrar: {e}")
