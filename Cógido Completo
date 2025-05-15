@@ -1,0 +1,73 @@
+class Usuario:
+    def __init__(self, nome, email, senha):
+        self.nome = nome
+        self.email = email
+        self.senha = senha
+
+class UsuarioRepositorio:
+    def __init__(self):
+        self.usuarios = {}  # Simula um banco de dados
+
+    def salvar(self, usuario):
+        self.usuarios[usuario.email] = usuario
+
+    def buscar_por_email(self, email):
+        return self.usuarios.get(email)
+
+class UsuarioServico:
+    def __init__(self, repositorio):
+        self.repositorio = repositorio
+
+    def cadastrar_usuario(self, nome, email, senha):
+        if not nome or not email or not senha:
+            raise ValueError("Todos os campos são obrigatórios.")
+
+        if self.repositorio.buscar_por_email(email):
+            raise ValueError("E-mail já cadastrado.")
+
+        novo_usuario = Usuario(nome, email, senha)
+        self.repositorio.salvar(novo_usuario)
+        return novo_usuario
+
+    def logar_usuario(self, email, senha):
+        usuario = self.repositorio.buscar_por_email(email)
+        if not usuario:
+            raise ValueError("E-mail inválido.")
+
+        if usuario.senha != senha:
+            raise ValueError("Senha inválida.")
+
+        return usuario
+
+# Exemplo de uso
+repositorio = UsuarioRepositorio()
+servico = UsuarioServico(repositorio)
+
+try:
+    # Cadastro de usuário
+    novo_usuario = servico.cadastrar_usuario("João da Silva", "joao@email.com", "senha123")
+    print(f"Usuário cadastrado: {novo_usuario.nome}, {novo_usuario.email}")
+
+    # Tentativa de cadastrar com email existente
+    servico.cadastrar_usuario("Maria Souza", "joao@email.com", "outra_senha")
+
+except ValueError as e:
+    print(f"Erro ao cadastrar: {e}")
+
+try:
+    # Login bem-sucedido
+    usuario_logado = servico.logar_usuario("joao@email.com", "senha123")
+    print(f"Usuário logado: {usuario_logado.nome}")
+
+    # Login com senha incorreta
+    servico.logar_usuario("joao@email.com", "senha_errada")
+
+except ValueError as e:
+    print(f"Erro ao logar: {e}")
+
+try:
+    # Cadastro com campos vazios
+    servico.cadastrar_usuario("", "email@email.com", "senha")
+
+except ValueError as e:
+    print(f"Erro ao cadastrar: {e}")
